@@ -1,0 +1,14 @@
+rules_version = '2';
+
+// ⚠️ مفتوح للجميع (لرفع صور المنتجات بدون تسجيل دخول)
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      // قراءة عامة (لعرض الصور في المنيو)
+      allow read: if true;
+      // كتابة عامة + قيود حجم/نوع
+      allow write: if request.resource.size < 5 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+  }
+}
